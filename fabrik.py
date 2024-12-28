@@ -51,6 +51,10 @@ def muestra_robot(O, obj):
     handles.append(goal)
     labels.append(f'Objetivo ({round(obj[0], 2)}, {round(obj[1], 2)})')
     
+    # Añadir el título a la visualización
+    plt.title('Visualización del Algoritmo FABRIK (Cinemática Inversa)', fontsize=16, fontweight='bold')
+
+
     # Añadir la leyenda debajo del gráfico
     plt.legend(handles=handles, labels=labels, loc='upper center', bbox_to_anchor=(0.5, -0.05), ncol=3)
 
