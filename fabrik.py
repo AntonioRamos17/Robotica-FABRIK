@@ -26,10 +26,14 @@ def muestra_origenes(O, final=0):
         print('E.Final = ' + str([round(j, 3) for j in final]))
 
 def muestra_robot(O, obj):
-    # Crear una figura con tamaño personalizado (por ejemplo, 12x8 pulgadas)
-    plt.figure(figsize=(12, 8))  # Cambia las dimensiones según tus preferencias
+    # Crear una figura con tamaño personalizado
+    plt.figure(figsize=(12, 8))  
     plt.xlim(-L, L)
     plt.ylim(-L, L)
+    
+    # Mostrar cuadrícula y etiquetas de los ejes
+    plt.grid(True)
+
     T = [np.array(o).T.tolist() for o in O]
     
     # Lista para almacenar las etiquetas de la leyenda
@@ -45,16 +49,15 @@ def muestra_robot(O, obj):
         point, = plt.plot(T[i][0], T[i][1], 'o', color=cs.hsv_to_rgb(i / float(len(T)), 1, 1))
         handles.append(point)
         labels.append(f'Articulación {i} ({round(T[i][0], 2)}, {round(T[i][1], 2)})')
-    
+
     # Dibujar el objetivo final
     goal, = plt.plot(obj[0], obj[1], '*', label='Objetivo', color='red')
     handles.append(goal)
     labels.append(f'Objetivo ({round(obj[0], 2)}, {round(obj[1], 2)})')
     
-    # Añadir el título a la visualización
-    plt.title('Visualización del Algoritmo FABRIK (Cinemática Inversa)', fontsize=16, fontweight='bold')
-
-
+    # Añadir título
+    plt.title('Visualización del Robot y su Objetivo', fontsize=16, fontweight='bold')
+    
     # Añadir la leyenda debajo del gráfico
     plt.legend(handles=handles, labels=labels, loc='upper center', bbox_to_anchor=(0.5, -0.05), ncol=3)
 
@@ -63,6 +66,7 @@ def muestra_robot(O, obj):
     
     time.sleep(2)  
     plt.close()
+
 
 def matriz_T(d, th, a, al):
     return [[cos(th), -sin(th) * cos(al),  sin(th) * sin(al), a * cos(th)],
