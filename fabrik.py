@@ -26,25 +26,37 @@ def muestra_origenes(O, final=0):
         print('E.Final = ' + str([round(j, 3) for j in final]))
 
 def muestra_robot(O, obj):
-    # Muestra el robot gráficamente
-    plt.figure()
+    # Crear una figura con tamaño personalizado (por ejemplo, 12x8 pulgadas)
+    plt.figure(figsize=(12, 8))  # Cambia las dimensiones según tus preferencias
     plt.xlim(-L, L)
     plt.ylim(-L, L)
     T = [np.array(o).T.tolist() for o in O]
     
+    # Lista para almacenar las etiquetas de la leyenda
+    handles = []
+    labels = []
+
     # Dibujar las líneas entre las articulaciones
     for i in range(1, len(T)):
-        plt.plot([T[i-1][0], T[i][0]], [T[i-1][1], T[i][1]], color=cs.hsv_to_rgb(i / float(len(T)), 1, 1))  # Línea entre articulaciones
+        plt.plot([T[i-1][0], T[i][0]], [T[i-1][1], T[i][1]], color=cs.hsv_to_rgb(i / float(len(T)), 1, 1))
     
-    # Dibujar los puntos de las articulaciones
+    # Dibujar los puntos de las articulaciones y agregar las coordenadas a la leyenda
     for i in range(len(T)):
-        plt.plot(T[i][0], T[i][1], 'o', color=cs.hsv_to_rgb(i / float(len(T)), 1, 1))  # Puntos de las articulaciones
+        point, = plt.plot(T[i][0], T[i][1], 'o', color=cs.hsv_to_rgb(i / float(len(T)), 1, 1))
+        handles.append(point)
+        labels.append(f'Articulación {i} ({round(T[i][0], 2)}, {round(T[i][1], 2)})')
     
     # Dibujar el objetivo final
-    plt.plot(obj[0], obj[1], '*', label='Objetivo', color='red')
+    goal, = plt.plot(obj[0], obj[1], '*', label='Objetivo', color='red')
+    handles.append(goal)
+    labels.append(f'Objetivo ({round(obj[0], 2)}, {round(obj[1], 2)})')
     
+    # Añadir la leyenda debajo del gráfico
+    plt.legend(handles=handles, labels=labels, loc='upper center', bbox_to_anchor=(0.5, -0.05), ncol=3)
+
     plt.pause(0.0001) 
     plt.show(block=False)
+    
     time.sleep(2)  
     plt.close()
 
