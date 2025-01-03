@@ -118,12 +118,14 @@ start_time = time.time()
 while dist > EPSILON and abs(prev - dist) > EPSILON / 100.:
     prev = dist
     O[-1] = objetivo
+    # Fase 1: De la última articulación a la primera - Backward
     for i in range(len(O) - 2, -1, -1):
         direction = np.subtract(O[i], O[i + 1])
         direction = direction / np.linalg.norm(direction)
         O[i] = O[i + 1] + direction * a[i]
     
     O[0] = [0, 0, 0]
+    # Fase 2: De la primera articulación a la última - Forward
     for i in range(1, len(O)):
         direction = np.subtract(O[i], O[i - 1])
         direction = direction / np.linalg.norm(direction)
