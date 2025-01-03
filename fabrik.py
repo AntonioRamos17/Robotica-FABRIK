@@ -50,6 +50,12 @@ def muestra_robot(O, obj):
         handles.append(point)
         labels.append(f'Articulación {i} ({round(T[i][0], 2)}, {round(T[i][1], 2)})')
 
+        # Dibujar áreas de alcance de cada articulación
+        if i < len(T) - 1:  # No dibujar para el último punto
+            alcance = a[i]  # Longitud del segmento actual
+            circulo = plt.Circle((T[i][0], T[i][1]), alcance, color=cs.hsv_to_rgb(i / float(len(T)), 1, 0.5), fill=False, linestyle='--')
+            plt.gca().add_artist(circulo)
+
     # Dibujar el objetivo final
     goal, = plt.plot(obj[0], obj[1], '*', label='Objetivo', color='red')
     handles.append(goal)
