@@ -1,10 +1,10 @@
 #! /usr/bin/env python
 # -*- coding: utf-8 -*-
 
-# Robótica Computacional - 
+# Robótica Computacional - Curso 2024/2025
 # Grado en Ingeniería Informática (Cuarto)
-# Práctica: Resolución de la cinemática inversa mediante CCD
-#           (Cyclic Coordinate Descent).
+# Autor: Antonio Ramos Castilla
+# Trabajo de Teoría: Resolución de la cinemática inversa mediante FABRIK
 
 import sys
 from math import *
@@ -25,9 +25,9 @@ def muestra_origenes(O, final=0):
     if final:
         print('E.Final = ' + str([round(j, 3) for j in final]))
 
-def muestra_robot(O, obj):
+def muestra_robot(O, obj, pausa=0.5):
     # Crear una figura con tamaño personalizado
-    plt.figure(figsize=(12, 8))  
+    plt.clf()
     plt.xlim(-L, L)
     plt.ylim(-L, L)
     
@@ -36,37 +36,22 @@ def muestra_robot(O, obj):
 
     T = [np.array(o).T.tolist() for o in O]
     
-    # Lista para almacenar las etiquetas de la leyenda
-    handles = []
-    labels = []
-
     # Dibujar las líneas entre las articulaciones
     for i in range(1, len(T)):
         plt.plot([T[i-1][0], T[i][0]], [T[i-1][1], T[i][1]], color=cs.hsv_to_rgb(i / float(len(T)), 1, 1))
     
-    # Dibujar los puntos de las articulaciones y agregar las coordenadas a la leyenda
+    # Dibujar los puntos de las articulaciones
     for i in range(len(T)):
-        point, = plt.plot(T[i][0], T[i][1], 'o', color=cs.hsv_to_rgb(i / float(len(T)), 1, 1))
-        handles.append(point)
-        labels.append(f'Articulación {i} ({round(T[i][0], 2)}, {round(T[i][1], 2)})')
+        plt.plot(T[i][0], T[i][1], 'o', color=cs.hsv_to_rgb(i / float(len(T)), 1, 1))
 
     # Dibujar el objetivo final
-    goal, = plt.plot(obj[0], obj[1], '*', label='Objetivo', color='red')
-    handles.append(goal)
-    labels.append(f'Objetivo ({round(obj[0], 2)}, {round(obj[1], 2)})')
+    plt.plot(obj[0], obj[1], '*', label='Objetivo', color='red')
     
     # Añadir título
     plt.title('Visualización del Robot y su Objetivo', fontsize=16, fontweight='bold')
     
-    # Añadir la leyenda debajo del gráfico
-    plt.legend(handles=handles, labels=labels, loc='upper center', bbox_to_anchor=(0.5, -0.05), ncol=3)
-
-    plt.pause(0.0001) 
-    plt.show(block=False)
-    
-    time.sleep(2)  
-    plt.close()
-
+    # Actualizar la visualización
+    plt.pause(pausa)
 
 def matriz_T(d, th, a, al):
     return [[cos(th), -sin(th) * cos(al),  sin(th) * sin(al), a * cos(th)],
@@ -118,13 +103,12 @@ muestra_origenes(O)
 target_distance = np.linalg.norm(np.subtract(objetivo, O[-1][-1]))
 L = target_distance
 
-# Calculamos la posición inicial
-
 dist = float("inf")
 prev = 0.
 iteracion = 1
 
 # Mostrar la posición inicial antes de iniciar el bucle
+plt.figure(figsize=(12, 8))  # Crear una figura persistente para la animación
 print("\n- Posición inicial:")
 muestra_origenes(O)
 muestra_robot(O, objetivo)
@@ -155,7 +139,7 @@ while dist > EPSILON and abs(prev - dist) > EPSILON / 100.:
     # Mostrar la iteración actual
     print("\n- Iteración " + str(iteracion) + ':')
     muestra_origenes(O)
-    muestra_robot(O, objetivo)
+    muestra_robot(O, objetivo, pausa=0.5)
     print("Distancia al objetivo = " + str(round(dist, 5)))
 
     iteracion += 1
@@ -166,7 +150,6 @@ execution_time = end_time - start_time
 if dist <= EPSILON:
     print("\n" + str(iteracion) + " iteraciones para converger.")
     print("- Tiempo de ejecución: " + str(round(execution_time, 5)) + " segundos.")
-
 else:
     print("\nNo hay convergencia tras " + str(iteracion) + " iteraciones.")
 print("- Umbral de convergencia epsilon: " + str(EPSILON))
