@@ -142,6 +142,7 @@ execution_time = end_time - start_time
 
 if dist <= EPSILON:
     print("\n" + str(iteracion) + " iteraciones para converger.")
+    muestra_origenes(O, objetivo)
     print("- Tiempo de ejecución: " + str(round(execution_time, 5)) + " segundos.")
 else:
     print("\nNo hay convergencia tras " + str(iteracion) + " iteraciones.")
